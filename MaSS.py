@@ -41,9 +41,9 @@ def console(loggedIn):
 						  "2. View All Modules\n"
 						  "3. Change Password\n"
 						  "10. Exit")
-				if locationSelect == 10:
+				elif locationSelect == 10:
 					console(False)
-				if locationSelect == 1:
+				elif locationSelect == 1:
 					print("======================== Ver 0.0.1 ==========================")
 					print("================= Module and Student System =================")
 					print("============== User Page, FULLNAME, USR TYPE ===============\n")
@@ -53,7 +53,7 @@ def console(loggedIn):
 					print("Username: ", "TTESTERSON")
 					print("Password: ", "Test")
 					print("\n7. Main Menu")
-				if locationSelect == 2:
+				elif locationSelect == 2:
 					print("======================== Ver 0.0.1 ==========================")
 					print("================= Module and Student System =================")
 					print("============= Module Page, FULLNAME, USR TYPE ===============\n")
