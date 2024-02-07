@@ -3,6 +3,10 @@ import csv
 # variable init
 password = ""
 username = ""
+firstName = ""
+secondName = ""
+accountType = ""
+accountStatus = ""
 
 # CSV rows and fields
 userFields = []
@@ -13,6 +17,7 @@ moduleRows = []
 
 userModuleFields = []
 userModuleRows = []
+myModules = []
 
 # csv readers
 userFile = open("User.csv", 'r')
@@ -21,17 +26,18 @@ userFields = next(userReader)
 for userRow in userReader:
 	userRows.append(userRow)
 
-with open("Module.csv", 'r') as moduleFile:
-	moduleReader = csv.reader(moduleFile)
-	moduleFields = next(moduleReader)
-	for moduleRow in moduleReader:
-		moduleRows.append(moduleRow)
+moduleFile = open("Module.csv", 'r')
+moduleReader = csv.reader(moduleFile)
+moduleFields = next(moduleReader)
+for moduleRow in moduleReader:
+	moduleRows.append(moduleRow)
 
-with open("UserModule.csv", 'r') as userModules:
-	userModuleReader = csv.reader(userModules)
-	userModuleFields = next(userModuleReader)
-	for userModuleRow in userModuleReader:
-		userModuleRows.append(userModuleRow)
+userModules = open("UserModule.csv", 'r')
+userModuleReader = csv.reader(userModules)
+userModuleFields = next(userModuleReader)
+for userModuleRow in userModuleReader:
+	userModuleRows.append(userModuleRow)
+
 
 
 # Login Systems
@@ -39,14 +45,25 @@ def logIn():
 	print("======================== Ver 0.0.1 ==========================")
 	print("================= Module and Student System =================")
 	print("======================= Login Page ==========================\n")
+	global username
+	global password
+	global firstName
+	global secondName
+	global accountType
+	global accountStatus
 	username = input("Enter your username: ")
 	password = input("Enter your password: ")
 	for i in range(len(userRows)):
 		if userRows[i][0] == username and userRows[i][1] == password:
-			print(userRows[i][0], userRows[i][1], userRows[i][2], userRows[i][3], userRows[i][4], userRows[i][5])
+			username = userRows[i][0]
+			password = userRows[i][1]
+			firstName = userRows[i][2]
+			secondName = userRows[i][3]
+			accountType = userRows[i][4]
+			accountStatus = userRows[i][5]
 			loggedIn = True
 			print("Logged in successfully")
-			return loggedIn and password and username
+			return loggedIn
 	else:
 		print("Incorrect Username or Password!")
 		logIn()
@@ -58,23 +75,87 @@ def console(loggedIn):
 	while not loggedIn:
 
 		loggedIn = logIn()
+		loggedIn = True
 
 	else:
 		# student main page
 		print("======================== Ver 0.0.1 ==========================")
 		print("================= Module and Student System =================")
-		print("========== Student Main Page", username, "USR TYPE ============\n")
+		print("============ Main Page,", firstName, secondName, ",", accountType, "============\n")
 		print("1. View User Profile\n"
 			  "2. View All Modules\n"
 			  "3. Change Password\n"
+			  "4. My Modules\n"
 			  "10. Exit")
 		while loggedIn:
-			while locationSelect == 1 or 2 or 3 or 4 or 5 or 6 or 7 or 10:
+			# Student Pages
+			if (locationSelect == 1 or 2 or 3 or 4 or 5 or 6 or 7 or 10) and accountType == "Student":
+				locationSelect = int(input("\nWhere would you like to go?: "))
+				for x in range(len(userModuleRows)):
+					if username == userModuleRows[x][0]:
+						module = userModuleRows[x][1]
+						for y in range(len(moduleRows)):
+							if module == moduleRows[y][0]:
+								myModules.append(moduleRows[y][1])
+				if locationSelect == 7:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("============ Main Page,", firstName, secondName + ",", accountType, "============\n")
+					print("1. View User Profile\n"
+						  "2. View All Modules\n"
+						  "3. Change Password\n"
+						  "4. My Modules\n"
+						  "10. Exit")
+				elif locationSelect == 10:
+					console(False)
+				elif locationSelect == 1:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("============ User Page,", firstName, secondName + ",", accountType, "============\n")
+					print("First Name: ", firstName)
+					print("Second Name: ", secondName)
+					print("User Type: ", accountType)
+					print("Username: ", username)
+					print("Password: ", password)
+					print("\n7. Main Menu")
+				elif locationSelect == 2:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("============ Module Page,", firstName, secondName + ",", accountType, "============\n")
+					print("Available Modules - \n")
+					for i in range(len(moduleRows)):
+						print(moduleRows[i][1], "\n")
+
+					print("\n7. Main Menu")
+				elif locationSelect == 3:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("======= Change Password Page,", firstName, secondName + ",", accountType, "=======\n")
+
+				elif locationSelect == 4:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("======= My Modules Page,", firstName, secondName + ",", accountType, "=======\n")
+					print("My Modules -")
+					for x in range(len(userModuleRows)):
+						if username == userModuleRows[x][0]:
+							module = userModuleRows[x][1]
+							for y in range(len(moduleRows)):
+								if module == moduleRows[y][0]:
+									print(moduleRows[y][1])
+					print("\n7. Main Menu")
+				elif locationSelect == 5:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("======= Withdraw Modules Page,", firstName, secondName + ",", accountType, "=======\n")
+
+			# Lecturer Pages
+			elif (locationSelect == 1 or 2 or 3 or 4 or 5 or 6 or 7 or 10) and accountType == "Lecturer":
 				locationSelect = int(input("\nWhere would you like to go?: "))
 				if locationSelect == 7:
-					print("======================== Ver 0.0.1 ==========================")
+					print("======================== ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
-					print("========== Student Main Page, FULLNAME, USR TYPE ============\n")
+					print("============ Main Page,", firstName, secondName + ",", accountType, "============\n")
 					print("1. View User Profile\n"
 						  "2. View All Modules\n"
 						  "3. Change Password\n"
@@ -82,25 +163,28 @@ def console(loggedIn):
 				elif locationSelect == 10:
 					console(False)
 				elif locationSelect == 1:
-					print("======================== Ver 0.0.1 ==========================")
+					print("======================== ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
-					print("============== User Page, FULLNAME, USR TYPE ===============\n")
-					print("First Name: ", "TEST")
-					print("Second Name: ", "TESTERSON")
-					print("User Type: ", "ADMIN")
-					print("Username: ", "TTESTERSON")
-					print("Password: ", )
+					print("============ User Page,", firstName, secondName + ",", accountType, "============\n")
+					print("First Name: ", firstName)
+					print("Second Name: ", secondName)
+					print("User Type: ", accountType)
+					print("Username: ", username)
+					print("Password: ", password)
 					print("\n7. Main Menu")
 				elif locationSelect == 2:
-					print("======================== Ver 0.0.1 ==========================")
+					print("======================== ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
-					print("============= Module Page, FULLNAME, USR TYPE ===============\n")
-					print("Available Modules - \n", "Module List")
+					print("============ Module Page,", firstName, secondName + ",", accountType, "============\n")
+					print("Available Modules - \n")
+					for i in range(len(moduleRows)):
+						print(moduleRows[i][1], "\n")
+
 					print("\n7. Main Menu")
 				elif locationSelect == 3:
-					print("======================== Ver 0.0.1 ==========================")
+					print("======================== ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
-					print("========= Change Password Page, FULLNAME, USR TYPE ==========\n")
+					print("======= Change Password Page,", firstName, secondName + ",", accountType, "=======\n")
 
 
 console(False)
