@@ -31,19 +31,19 @@ myModules = []
 # csv readers
 userFile = open("User.csv", 'r')
 userReader = csv.reader(userFile)
-userFields = next(userReader)
+# userFields = next(userReader) -- DISABLED DUE TO BREAKING CHANGING CSV
 for userRow in userReader:
 	userRows.append(userRow)
 
 moduleFile = open("Module.csv", 'r')
 moduleReader = csv.reader(moduleFile)
-moduleFields = next(moduleReader)
+# moduleFields = next(moduleReader) -- DISABLED DUE TO BREAKING CHANGING CSV
 for moduleRow in moduleReader:
 	moduleRows.append(moduleRow)
 
 userModules = open("UserModule.csv", 'r')
 userModuleReader = csv.reader(userModules)
-userModuleFields = next(userModuleReader)
+# userModuleFields = next(userModuleReader) -- DISABLED DUE TO BREAKING CHANGING CSV
 for userModuleRow in userModuleReader:
 	userModuleRows.append(userModuleRow)
 
@@ -64,6 +64,8 @@ def logIn():
 	username = input("Enter your username: ")
 	password = input("Enter your password: ")
 	for i in range(len(userRows)):
+		print(userRows[i][1])
+
 		if userRows[i][0] == username and userRows[i][1] == password:
 			username = userRows[i][0]
 			password = userRows[i][1]
@@ -79,9 +81,14 @@ def logIn():
 			loggedIn = True
 			print("Logged in successfully")
 			return loggedIn
-	else:
-		print("Incorrect Username or Password!")
-		logIn()
+
+		elif username == "Username":
+			print("Nice Try ^_^")
+			logIn()
+
+		elif i + 2 > len(userRows):
+			print("Incorrect Username or Password")
+			logIn()
 
 
 def fileChange(editedfile, fileread):
@@ -104,7 +111,6 @@ def console(loggedIn):
 	while not loggedIn:
 
 		loggedIn = logIn()
-		loggedIn = True
 
 	else:
 		# student main page
@@ -145,6 +151,7 @@ def console(loggedIn):
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("============ User Page,", firstName, secondName + ",", accountType, "============\n")
+					password = userRows[rowPlace][1]
 					print("First Name: ", firstName)
 					print("Second Name: ", secondName)
 					print("User Type: ", accountType)
@@ -182,6 +189,7 @@ def console(loggedIn):
 						while passUnchanged == 1:
 							print("Current Password: ", password)
 							print("\n", "=============================", "\n")
+							oldPassword = input("Enter your OLD password: ")
 							newPassword = input("New Password: ")
 							newPasswordCheck = input("Re-enter New Password: ")
 							if newPasswordCheck == newPassword:
