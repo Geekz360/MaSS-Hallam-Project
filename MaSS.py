@@ -63,6 +63,7 @@ def logIn():
 
 	username = input("Enter your username: ")
 	password = input("Enter your password: ")
+	# Go through the userRows function (User CSV) and check if they are applicable for a log in
 	for i in range(len(userRows)):
 
 		if userRows[i][0] == username and userRows[i][1] == password:
@@ -74,13 +75,14 @@ def logIn():
 			accountStatus = userRows[i][5]
 			rowPlace = i
 
+			# Ensure an account cant log in if they're blocked
 			if accountStatus == "Blocked":
 				print("Account is blocked! Please contact a lecturer.")
 				logIn()
 			loggedIn = True
 			print("Logged in successfully")
 			return loggedIn
-
+		# Stop the user inputting Username and Password as log in information
 		elif username == "Username":
 			print("Nice Try ^_^")
 
@@ -88,6 +90,7 @@ def logIn():
 			print("Incorrect Username or Password")
 
 
+# Initialise my function to write over the CSV files to be able to update information
 def fileChange(editedfile, fileread):
 	with open(editedfile, 'w', newline='') as filewritten:
 		writer = csv.writer(filewritten)
@@ -112,21 +115,21 @@ def console(loggedIn):
 			console(True)
 
 	else:
-		# student main page
-		print("======================== Ver 0.0.4 ==========================")
-		print("================= Module and Student System =================")
-		print("============ Main Page,", firstName, secondName, ",", accountType, "============\n")
-		print("1. View User Profile\n"
-			  "2. View All Modules\n"
-			  "3. Change Password\n"
-			  "4. My Modules\n"
-			  "5. Withdraw From a Module\n"
-			  "6. Apply to a Module\n"
-			  "10. Exit")
 		while loggedIn:
 			# Student Pages
 			if (locationSelect == 1 or 2 or 3 or 4 or 5 or 6 or 7 or 10) and accountType == "Student":
+				print("======================== Ver 0.0.4 ==========================")
+				print("================= Module and Student System =================")
+				print("============ Main Page,", firstName, secondName, ",", accountType, "============\n")
+				print("1. View User Profile\n"
+					  "2. View All Modules\n"
+					  "3. Change Password\n"
+					  "4. My Modules\n"
+					  "5. Withdraw From a Module\n"
+					  "6. Apply to a Module\n"
+					  "10. Exit")
 				locationSelect = int(input("\nWhere would you like to go?: "))
+				'''The following block will re-read the user module files,to ensure that they are consistently updated throughout'''
 				for x in range(len(userModuleRows)):
 					if username == userModuleRows[x][0]:
 						module = userModuleRows[x][1]
@@ -134,16 +137,7 @@ def console(loggedIn):
 							if module == moduleRows[y][0]:
 								myModules.append(moduleRows[y][1])
 				if locationSelect == 7:
-					print("======================== Ver 0.0.4 ==========================")
-					print("================= Module and Student System =================")
-					print("============ Main Page,", firstName, secondName + ",", accountType, "============\n")
-					print("1. View User Profile\n"
-						  "2. View All Modules\n"
-						  "3. Change Password\n"
-						  "4. My Modules\n"
-						  "5. Withdraw From a Module\n"
-						  "6. Apply to a Module\n"
-						  "10. Exit")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 10:
 					console(False)
 				elif locationSelect == 1:
@@ -158,6 +152,8 @@ def console(loggedIn):
 					print("Password: ", password)
 					print("\n7. Main Menu")
 
+					locationSelect = input("Where would you like to go?: ")
+
 				elif locationSelect == 2:
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
@@ -167,47 +163,42 @@ def console(loggedIn):
 						print(moduleRows[i][1], "\n")
 
 					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 3:
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("======= Change Password Page,", firstName, secondName + ",", accountType, "=======\n")
 					print("Username: ", username)
+					for l in range(len(userRows)):
+						if username == userRows[l][0]:
+							password = userRows[l][1]
+
 					print("Password: ", password)
 					passChange = input("Would you like to change your password? (Y/N)")
 					if passChange == "N":
 						print("Exiting...")
-						print("1. View User Profile\n"
-							  "2. View All Modules\n"
-							  "3. Change Password\n"
-							  "4. My Modules\n"
-							  "5. Withdraw From a Module\n"
-							  "6. Apply to a Module\n"
-							  "10. Exit")
+						break
 					if passChange == "Y":
 						passUnchanged = 1
+						# Change user passwords, this will enable the user to enter a new password, check it then finalise it.
 						while passUnchanged == 1:
-							print("Current Password: ", password)
 							print("\n", "=============================", "\n")
 							oldPassword = input("Enter your OLD password: ")
-							newPassword = input("New Password: ")
-							newPasswordCheck = input("Re-enter New Password: ")
-							if newPasswordCheck == newPassword:
-								userRows[rowPlace][1] = newPassword
-								fileChange('user.csv', userRows)
-								print("1. View User Profile\n"
-									  "2. View All Modules\n"
-									  "3. Change Password\n"
-									  "4. My Modules\n"
-									  "5. Withdraw From a Module\n"
-									  "6. Apply to a Module\n"
-									  "10. Exit")
-								break
-
+							if oldPassword == password:
+								newPassword = input("New Password: ")
+								newPasswordCheck = input("Re-enter New Password: ")
+								if newPasswordCheck == newPassword:
+									userRows[rowPlace][1] = newPassword
+									fileChange('user.csv', userRows)
+									break
+					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 4:
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("======= My Modules Page,", firstName, secondName + ",", accountType, "=======\n")
 					print("My Modules -")
+					# Present the user with their enrolled modules
 					for x in range(len(userModuleRows)):
 						if username == userModuleRows[x][0]:
 							module = userModuleRows[x][1]
@@ -215,11 +206,13 @@ def console(loggedIn):
 								if module == moduleRows[y][0]:
 									print(moduleRows[y][1])
 					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 5:
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("======= Withdraw Modules Page,", firstName, secondName + ",", accountType, "=======\n")
 					print("My Modules - ")
+					# Allow a user to leave a module
 					for x in range(len(userModuleRows)):
 						if username == userModuleRows[x][0]:
 							module = userModuleRows[x][1]
@@ -236,19 +229,16 @@ def console(loggedIn):
 								fileChange('UserModule.csv', userModuleRows)
 								break
 					elif moduleLeave == "N":
-						print("1. View User Profile\n"
-							  "2. View All Modules\n"
-							  "3. Change Password\n"
-							  "4. My Modules\n"
-							  "5. Withdraw From a Module\n"
-							  "6. Apply to a Module\n"
-							  "10. Exit")
+						break
+					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 
 				elif locationSelect == 6:
 					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("==== Apply to Modules Page,", firstName, secondName + ",", accountType, "====\n")
 					print("My Modules -")
+					# Allow a user to apply to a module
 					for x in range(len(userModuleRows)):
 						if username == userModuleRows[x][0]:
 							module = userModuleRows[x][1]
@@ -269,39 +259,40 @@ def console(loggedIn):
 								fileChange('UserModule.csv', userModuleRows)
 								break
 					elif moduleAdd == "N":
-						print("1. View User Profile\n"
-							  "2. View All Modules\n"
-							  "3. Change Password\n"
-							  "4. My Modules\n"
-							  "5. Withdraw From a Module\n"
-							  "6. Apply to a Module\n"
-							  "10. Exit")
+						break
+					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 
 			# Lecturer Pages
 			elif (locationSelect == 1 or 2 or 3 or 4 or 5 or 6 or 7 or 10) and accountType == "Lecturer":
+				print("======================== Ver 0.0.4 ==========================")
+				print("================= Module and Student System =================")
+				print("============ Main Page,", firstName, secondName + ",", accountType, "============\n")
+				print("1. View User Profile\n"
+					  "2. View All Modules\n"
+					  "3. Change Password\n"
+					  "4. My Modules\n"
+					  "5. Create a Module\n"
+					  "10. Exit")
 				locationSelect = int(input("\nWhere would you like to go?: "))
 				if locationSelect == 7:
-					print("======================== ver 0.0.4 ==========================")
-					print("================= Module and Student System =================")
-					print("============ Main Page,", firstName, secondName + ",", accountType, "============\n")
-					print("1. View User Profile\n"
-						  "2. View All Modules\n"
-						  "3. Change Password\n"
-						  "10. Exit")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 10:
 					console(False)
 				elif locationSelect == 1:
-					print("======================== ver 0.0.4 ==========================")
+					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("============ User Page,", firstName, secondName + ",", accountType, "============\n")
+					password = userRows[rowPlace][1]
 					print("First Name: ", firstName)
 					print("Second Name: ", secondName)
 					print("User Type: ", accountType)
 					print("Username: ", username)
 					print("Password: ", password)
 					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 2:
-					print("======================== ver 0.0.4 ==========================")
+					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("============ Module Page,", firstName, secondName + ",", accountType, "============\n")
 					print("Available Modules - \n")
@@ -309,41 +300,77 @@ def console(loggedIn):
 						print(moduleRows[i][1], "\n")
 
 					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 				elif locationSelect == 3:
-					print("======================== ver 0.0.4 ==========================")
+					print("======================== Ver 0.0.4 ==========================")
 					print("================= Module and Student System =================")
 					print("======= Change Password Page,", firstName, secondName + ",", accountType, "=======\n")
 					print("Username: ", username)
+					for l in range(len(userRows)):
+						if username == userRows[l][0]:
+							password = userRows[l][1]
+
 					print("Password: ", password)
 					passChange = input("Would you like to change your password? (Y/N)")
 					if passChange == "N":
 						print("Exiting...")
-						print("1. View User Profile\n"
-							  "2. View All Modules\n"
-							  "3. Change Password\n"
-							  "4. My Modules\n"
-							  "5. Withdraw From a Module\n"
-							  "6. Apply to a Module\n"
-							  "10. Exit")
+						print("\n7. Main Menu")
+						locationSelect = input("Where would you like to go?: ")
 					if passChange == "Y":
 						passUnchanged = 1
+						# Change user passwords, this will enable the user to enter a new password, check it then finalise it.
 						while passUnchanged == 1:
-							print("Current Password: ", password)
 							print("\n", "=============================", "\n")
-							newPassword = input("New Password: ")
-							newPasswordCheck = input("Re-enter New Password: ")
-							if newPasswordCheck == newPassword:
-								userRows[rowPlace][1] = newPassword
-								fileChange('user.csv', userRows)
+							oldPassword = input("Enter your OLD password: ")
+							if oldPassword == password:
+								newPassword = input("New Password: ")
+								newPasswordCheck = input("Re-enter New Password: ")
+								if newPasswordCheck == newPassword:
+									userRows[rowPlace][1] = newPassword
+									fileChange('user.csv', userRows)
+									break
+					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
 
-								print("1. View User Profile\n"
-									  "2. View All Modules\n"
-									  "3. Change Password\n"
-									  "4. My Modules\n"
-									  "5. Withdraw From a Module\n"
-									  "6. Apply to a Module\n"
-									  "10. Exit")
-								break
+				elif locationSelect == 4:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("======= My Modules Page,", firstName, secondName + ",", accountType, "=======\n")
+					print("My Modules -")
+					# Present the user with their enrolled modules
+					for x in range(len(userModuleRows)):
+						if username == userModuleRows[x][0]:
+							module = userModuleRows[x][1]
+							for y in range(len(moduleRows)):
+								if module == moduleRows[y][0]:
+									print(moduleRows[y][1])
+					print("\n7. Main Menu")
+					locationSelect = input("Where would you like to go?: ")
+				elif locationSelect == 5:
+					print("======================== Ver 0.0.4 ==========================")
+					print("================= Module and Student System =================")
+					print("======= Create Modules Page,", firstName, secondName + ",", accountType, "=======\n")
+					print("Modules - ")
+					# Allow a lecturer to create modules
+					print("Module ID - Module Name")
+					for x in range(len(moduleRows)):
+						print(moduleRows[x][0], " - ", moduleRows[x][1])
+
+					moduleCreate = input("Would you like to create a module? (Y/N)").upper()
+					if moduleCreate == "Y":
+						moduleCreateID = input("Enter the new module ID: ")
+						moduleCreateName = input("Enter the new module name: ")
+						moduleRows.append([moduleCreateID, moduleCreateName])
+						fileChange('Module.csv', moduleRows)
+					elif moduleCreate == "N":
+						print("\n7. Main Menu")
+						locationSelect = input("Where would you like to go?: ")
+
+
+
+
+
+
 
 
 console(False)
