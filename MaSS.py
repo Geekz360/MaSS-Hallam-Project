@@ -64,7 +64,6 @@ def logIn():
 	username = input("Enter your username: ")
 	password = input("Enter your password: ")
 	for i in range(len(userRows)):
-		print(userRows[i][1])
 
 		if userRows[i][0] == username and userRows[i][1] == password:
 			username = userRows[i][0]
@@ -84,11 +83,9 @@ def logIn():
 
 		elif username == "Username":
 			print("Nice Try ^_^")
-			logIn()
 
 		elif i + 2 > len(userRows):
 			print("Incorrect Username or Password")
-			logIn()
 
 
 def fileChange(editedfile, fileread):
@@ -111,6 +108,8 @@ def console(loggedIn):
 	while not loggedIn:
 
 		loggedIn = logIn()
+		if loggedIn:
+			console(True)
 
 	else:
 		# student main page
