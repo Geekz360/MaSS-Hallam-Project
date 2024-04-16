@@ -17,7 +17,7 @@ secondName = ""
 accountType = ""
 accountStatus = ""
 rowPlace = 0
-verNumber = "======================== Ver 0.0.9 =========================="
+verNumber = "======================== Ver 1.0.0 =========================="
 
 # CSV rows and fields
 userFields = []
