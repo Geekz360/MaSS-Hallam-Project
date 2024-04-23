@@ -1,4 +1,5 @@
 import csv
+from prompt_toolkit import prompt
 
 # variable init
 global username
@@ -17,7 +18,7 @@ secondName = ""
 accountType = ""
 accountStatus = ""
 rowPlace = 0
-verNumber = "======================== Ver 1.0.0 =========================="
+verNumber = "======================== Ver 1.0.1 =========================="
 
 # CSV rows and fields
 userFields = []
@@ -64,7 +65,7 @@ def logIn():
 	global rowPlace
 
 	username = input("Enter your username: ")
-	password = input("Enter your password: ")
+	password = prompt("Enter your password: ", is_password=True)
 	# Go through the userRows function (User CSV) and check if they are applicable for a log in
 	for i in range(len(userRows)):
 
@@ -159,10 +160,10 @@ def changePassword():
 		# Change user passwords, this will enable the user to enter a new password, check it then finalise it.
 		while passUnchanged == 1:
 			print("\n", "=============================", "\n")
-			oldPassword = input("Enter your OLD password: ")
+			oldPassword = prompt("Enter your OLD password: ", is_password=True)
 			if oldPassword == password:
-				newPassword = input("New Password: ")
-				newPasswordCheck = input("Re-enter New Password: ")
+				newPassword = prompt("New Password: ", is_password=True)
+				newPasswordCheck = prompt("Re-enter New Password: ", is_password=True)
 				if newPasswordCheck == newPassword:
 					userRows[rowPlace][1] = newPassword
 					fileChange('user.csv', userRows)
